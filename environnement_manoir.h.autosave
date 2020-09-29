@@ -1,0 +1,17 @@
+#ifndef ENVIRONNEMENT_MANOIR_H
+#define ENVIRONNEMENT_MANOIR_H
+
+#include <QVector>
+
+#include "salle_manoir.h"
+
+class Environnement_manoir
+{
+public:
+    Environnement_manoir(QVector<int> taille );
+    
+private:
+    QVector<QVector<Salle_manoir>>;
+};
+
+#endif // ENVIRONNEMENT_MANOIR_H

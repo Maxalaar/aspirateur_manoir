@@ -1,0 +1,6 @@
+#include "environnement_manoir.h"
+
+Environnement_manoir::Environnement_manoir()
+{
+    
+}
