@@ -46,6 +46,7 @@ void Environnement_manoir::deplacement_entite(Entite_simulation* entite, int pos
 
     this->placer_entite(position_x, position_y, entite);
     emit rafraichissement_image();
+    emit fin_deplacement(entite);
 }
 
 void Environnement_manoir::deplacement_haut_entite(Entite_simulation* entite)

@@ -12,11 +12,16 @@ Aspirateur_agent::Aspirateur_agent(int position_initial_x, int position_initial_
     QObject::connect(this, &Aspirateur_agent::deplacement_gauche, manoir, &Environnement_manoir::deplacement_gauche_entite);
     QObject::connect(this, &Aspirateur_agent::deplacement_droite, manoir, &Environnement_manoir::deplacement_droite_entite);
 
+    QObject::connect(manoir, &Environnement_manoir::fin_deplacement, this, &Aspirateur_agent::fonction_planification);
+
     emit deplacement_haut(this);
 //    qDebug() << "Markeur 1 : " << thread()->currentThreadId();
 }
 
-void Aspirateur_agent::fonction_planification(void)
+void Aspirateur_agent::fonction_planification(Entite_simulation* entite)
 {
-
+    if(entite == this)
+    {
+        emit deplacement_haut(this);
+    }
 }

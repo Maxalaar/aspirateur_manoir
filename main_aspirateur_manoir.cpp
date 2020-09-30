@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 
     Environnement_manoir* manoir_1 = new Environnement_manoir(taille_manoir);
     Aspirateur_agent* aspirateur = new Aspirateur_agent(0, 0, manoir_1);
+    Aspirateur_agent* aspirateur2 = new Aspirateur_agent(2, 1, manoir_1);
     Fenetre_affichage_manoir* fenetre_manoir_1 = new Fenetre_affichage_manoir(manoir_1);
 
 //    Deplacement_thread* test_deplacement = new Deplacement_thread;

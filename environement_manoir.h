@@ -33,6 +33,7 @@ public slots:
 
 signals:
     void rafraichissement_image(void);
+    void fin_deplacement(Entite_simulation* entite);
 };
 
 #endif // ENVIRONNEMENT_MANOIR_H

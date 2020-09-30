@@ -15,7 +15,7 @@ private:
     Environnement_manoir* manoir;
 
 public slots:
-    void fonction_planification(void);
+    void fonction_planification(Entite_simulation* entite);
 
 signals:
     void deplacement_haut(Entite_simulation* entite);
