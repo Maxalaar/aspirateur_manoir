@@ -9,6 +9,8 @@ class Salle_manoir
 {
 public:
     Salle_manoir();
+    int position_x;
+    int position_y;
     QVector<Entite_simulation*> liste_entite;
 };
 

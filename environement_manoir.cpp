@@ -2,6 +2,7 @@
 
 Environnement_manoir::Environnement_manoir(QVector<int> taille_manoir)
 {
+    //On crée les salles
     for(int i = 0; i < taille_manoir[1]; i++)
     {
         QVector<Salle_manoir> ligne_salle_prov;
@@ -9,6 +10,8 @@ Environnement_manoir::Environnement_manoir(QVector<int> taille_manoir)
         for(int j = 0; j < taille_manoir[0]; j++)
         {
             Salle_manoir salle_manoir_prov;
+            salle_manoir_prov.position_x = i;
+            salle_manoir_prov.position_y = j;
             ligne_salle_prov.push_back(salle_manoir_prov);
         }
 
@@ -46,16 +49,11 @@ void Environnement_manoir::placer_entite(int positon_x, int positon_y, Entite_si
     tableau[positon_x][positon_y].liste_entite.push_back(entite);
 }
 
-//void Environnement_manoir::run()
-//{
-    
-//}
-
 void Environnement_manoir::deplacement_entite(Entite_simulation* entite, int position_x, int position_y)
 {
     for(int i = 0; i < tableau[entite->position_x][entite->position_y].liste_entite.size(); i++)
     {
-        if(tableau[entite->position_x][entite->position_y].liste_entite[i] == entite)
+        if(tableau[entite->position_x][entite->position_y].liste_entite[i] == entite && entite->type_entite == "aspirateur")
         {
             tableau[entite->position_x][entite->position_y].liste_entite.remove(i);
         }
@@ -69,7 +67,7 @@ void Environnement_manoir::deplacement_entite(Entite_simulation* entite, int pos
     emit fin_action(entite);
 }
 
-void Environnement_manoir::deplacement_haut_entite(Entite_simulation* entite)
+void Environnement_manoir::deplacement_droite_entite(Entite_simulation* entite)
 {
     if(0 <= entite->position_x + 1 && entite->position_x + 1 < tableau[0].size() && 0 <= entite->position_y && entite->position_y < tableau.size())
     {
@@ -83,7 +81,7 @@ void Environnement_manoir::deplacement_haut_entite(Entite_simulation* entite)
     }
 }
 
-void Environnement_manoir::deplacement_bas_entite(Entite_simulation* entite)
+void Environnement_manoir::deplacement_gauche_entite(Entite_simulation* entite)
 {
     if(0 <= entite->position_x - 1 && entite->position_x - 1 < tableau[0].size() && 0 <= entite->position_y && entite->position_y < tableau.size())
     {
@@ -93,10 +91,11 @@ void Environnement_manoir::deplacement_bas_entite(Entite_simulation* entite)
         deplacement->position_arriver_x = entite->position_x - 1;
         deplacement->position_arriver_y = entite->position_y;
         deplacement->temps_attente_ms = temps_deplacement_ms;
+        deplacement->start();
     }
 }
 
-void Environnement_manoir::deplacement_gauche_entite(Entite_simulation* entite)
+void Environnement_manoir::deplacement_bas_entite(Entite_simulation* entite)
 {
     if(0 <= entite->position_x && entite->position_x < tableau[0].size() && 0 <= entite->position_y - 1 && entite->position_y - 1 < tableau.size())
     {
@@ -106,10 +105,11 @@ void Environnement_manoir::deplacement_gauche_entite(Entite_simulation* entite)
         deplacement->position_arriver_x = entite->position_x;
         deplacement->position_arriver_y = entite->position_y - 1;
         deplacement->temps_attente_ms = temps_deplacement_ms;
+        deplacement->start();
     }
 }
 
-void Environnement_manoir::deplacement_droite_entite(Entite_simulation* entite)
+void Environnement_manoir::deplacement_haut_entite(Entite_simulation* entite)
 {
     if(0 <= entite->position_x && entite->position_x < tableau[0].size() && 0 <= entite->position_y + 1 && entite->position_y + 1 < tableau.size())
     {
@@ -119,50 +119,65 @@ void Environnement_manoir::deplacement_droite_entite(Entite_simulation* entite)
         deplacement->position_arriver_x = entite->position_x;
         deplacement->position_arriver_y = entite->position_y + 1;
         deplacement->temps_attente_ms = temps_deplacement_ms;
+        deplacement->start();
     }
 }
 
-void Environnement_manoir::mise_jour_manoire(Entite_simulation* entite)
+//Gestion de la vision des agents
+void Environnement_manoir::mise_jour_manoire_init(Entite_simulation* entite)
 {
     Vision_thread* vision = new Vision_thread;
-    QObject::connect(vision, &Vision_thread::fin_vision, this, &Environnement_manoir::envoi_mise_jour_manoire);
+    QObject::connect(vision, &Vision_thread::fin_vision, this, &Environnement_manoir::mise_jour_manoire);
     vision->entite = entite;
     vision->temps_attente_ms = temps_vision_ms;
     vision->start();
 }
 
-void Environnement_manoir::envoi_mise_jour_manoire(Entite_simulation* entite)
+void Environnement_manoir::mise_jour_manoire(Entite_simulation* entite)
 {
     emit mise_jour_manoir(entite, this->tableau);
     emit fin_action(entite);
 }
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//Gestion du ramassage des agents
+void Environnement_manoir::ramassage_init(Entite_simulation* entite)
+{
+    Ramassage_thread* ramassage = new Ramassage_thread;
+    QObject::connect(ramassage, &Ramassage_thread::fin_ramassage, this, &Environnement_manoir::ramassage);
+    ramassage->entite = entite;
+    ramassage->temps_attente_ms = temps_vision_ms;
+    ramassage->start();
+}
 
-//void Environnement_manoir::mise_jour_manoire(Entite_simulation* entite)
-//{
-//    Vision_thread* vision = new Vision_thread;
-//    QObject::connect(vision, &Vision_thread::fin_vision, this, &Environnement_manoir::envoi_mise_jour_manoire);
-//    vision->entite = entite;
-//    vision->temps_attente_ms = temps_vision_ms;
-//    vision->start();
-//}
+void Environnement_manoir::ramassage(Entite_simulation* entite)
+{
+    for(int i = 0; i < tableau[entite->position_x][entite->position_y].liste_entite.size(); i++)
+    {
+        if(tableau[entite->position_x][entite->position_y].liste_entite[i]->type_entite == "bijou")
+        {
+            tableau[entite->position_x][entite->position_y].liste_entite.remove(i);
+        }
+    }
+    emit fin_action(entite);
+}
 
-//void Environnement_manoir::envoi_mise_jour_manoire(Entite_simulation* entite)
-//{
-//    emit mise_jour_manoir(entite, this->tableau);
-//}
+void Environnement_manoir::aspiration_init(Entite_simulation* entite)
+{
+    Aspiration_thread* aspiration = new Aspiration_thread;
+    QObject::connect(aspiration, &Aspiration_thread::fin_aspiration, this, &Environnement_manoir::aspiration);
+    aspiration->entite = entite;
+    aspiration->temps_attente_ms = temps_vision_ms;
+    aspiration->start();
+}
 
-//void Environnement_manoir::mise_jour_manoire(Entite_simulation* entite)
-//{
-//    Vision_thread* vision = new Vision_thread;
-//    QObject::connect(vision, &Vision_thread::fin_vision, this, &Environnement_manoir::envoi_mise_jour_manoire);
-//    vision->entite = entite;
-//    vision->temps_attente_ms = temps_vision_ms;
-//    vision->start();
-//}
-
-//void Environnement_manoir::envoi_mise_jour_manoire(Entite_simulation* entite)
-//{
-//    emit mise_jour_manoir(entite, this->tableau);
-//}
+void Environnement_manoir::aspiration(Entite_simulation* entite)
+{
+    for(int i = 0; i < tableau[entite->position_x][entite->position_y].liste_entite.size(); i++)
+    {
+        if(tableau[entite->position_x][entite->position_y].liste_entite[i]->type_entite == "poussiere" || tableau[entite->position_x][entite->position_y].liste_entite[i]->type_entite == "bijou")
+        {
+            tableau[entite->position_x][entite->position_y].liste_entite.remove(i);
+        }
+    }
+    emit fin_action(entite);
+}

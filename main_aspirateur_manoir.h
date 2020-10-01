@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QVector>
 #include <QDebug>
+#include <QApplication>
+#include <QRandomGenerator>
 //#include <QObject>
 //#include <QThread>
 

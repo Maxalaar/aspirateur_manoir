@@ -5,6 +5,17 @@
 #include "environement_manoir.h"
 #include "salle_manoir.h"
 
+enum class action_type
+{
+    deplacement_haut,
+    deplacement_bas,
+    deplacement_gauche,
+    deplacement_droite,
+    voir,
+    ramasser,
+    aspirer
+};
+
 class Aspirateur_agent : public Entite_simulation
 {
     Q_OBJECT
@@ -14,9 +25,13 @@ public:
 private:
     Environnement_manoir* manoir;
     QVector<QVector<Salle_manoir>> tableau;
+    int sycro_vision = 30;
+    int compteur_vision = 0;
+    QVector<action_type> liste_action;
+    QVector<action_type> exploration_non_informees(QVector<QVector<Salle_manoir>> tableau);
 
 public slots:
-    void fonction_planification(Entite_simulation* entite);
+    void fonction_action(Entite_simulation* entite);
     void mise_jour_manoire(Entite_simulation* entite, QVector<QVector<Salle_manoir>> tableau);
 
 signals:

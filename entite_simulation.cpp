@@ -4,8 +4,3 @@ Entite_simulation::Entite_simulation()
 {
 
 }
-
-//void Entite_simulation::run()
-//{
-
-//}
