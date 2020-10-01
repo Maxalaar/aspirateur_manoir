@@ -51,6 +51,50 @@ void Fenetre_affichage_manoir::paintGL()
     double taille_salle_x = 2/(double)(manoir_dimention_x);
     double taille_salle_y = 2/(double)(manoir_dimention_y);
 
+    //On parcoure toutes les cellules du tableau est on affiche les entités
+    for(int i = 0; i < manoir_dimention_x; i++)
+    {
+        for(int j = 0; j < manoir_dimention_y; j++)
+        {
+            //On regarde pour chaque entité qui ce trouve dans la salle
+            for(int k = 0; k < manoir_tableau[i][j].liste_entite.size(); k++ )
+            {
+                //On affiche les aspirateurs
+                if(manoir_tableau[i][j].liste_entite[k]->type_entite == "aspirateur"){
+                    glBegin(GL_POLYGON);
+                    glColor3f(1,0,0);
+                    glVertex2f(i*taille_salle_x-1,j*taille_salle_y-1);
+                    glVertex2f((i+1)*taille_salle_x-1,j*taille_salle_y-1);
+                    glVertex2f((i+1)*taille_salle_x-1,(j+1)*taille_salle_y-1);
+                    glVertex2f(i*taille_salle_x-1,(j+1)*taille_salle_y-1);
+                    glEnd();
+                }
+
+                //On affiche les poussieres
+                if(manoir_tableau[i][j].liste_entite[k]->type_entite == "poussiere"){
+                    glBegin(GL_POLYGON);
+                    glColor3f(0.5,0.5,0.5);
+                    glVertex2f(i*taille_salle_x-1,j*taille_salle_y-1);
+                    glVertex2f((i+1)*taille_salle_x-1,j*taille_salle_y-1);
+                    glVertex2f((i+1)*taille_salle_x-1,(j+1)*taille_salle_y-1);
+                    glVertex2f(i*taille_salle_x-1,(j+1)*taille_salle_y-1);
+                    glEnd();
+                }
+
+                //On affiche les bijoux
+                if(manoir_tableau[i][j].liste_entite[k]->type_entite == "bijou"){
+                    glBegin(GL_POLYGON);
+                    glColor3f(1,1,0);
+                    glVertex2f(i*taille_salle_x-1,j*taille_salle_y-1);
+                    glVertex2f((i+1)*taille_salle_x-1,j*taille_salle_y-1);
+                    glVertex2f((i+1)*taille_salle_x-1,(j+1)*taille_salle_y-1);
+                    glVertex2f(i*taille_salle_x-1,(j+1)*taille_salle_y-1);
+                    glEnd();
+                }
+            }
+        }
+    }
+
     //On desiinge les lignes verticale du plateau
     for(int i = 0; i < manoir_dimention_x; i++)
     {
@@ -73,28 +117,6 @@ void Fenetre_affichage_manoir::paintGL()
         glVertex2f(-1, position_point_y);
         glVertex2f(1, position_point_y);
         glEnd();
-    }
-
-    //On parcoure toutes les cellules du tableau est on affiche les entités
-    for(int i = 0; i < manoir_dimention_x; i++)
-    {
-        for(int j = 0; j < manoir_dimention_y; j++)
-        {
-            //On regarde pour chaque entité qui ce trouve dans la salle
-            for(int k = 0; k < manoir_tableau[i][j].liste_entite.size(); k++ )
-            {
-                //On affiche les aspirateurs
-                if(manoir_tableau[i][j].liste_entite[k]->type_entite == "aspirateur"){
-                    glBegin(GL_POLYGON);
-                    glColor3f(1,0,0);
-                    glVertex2f(i*taille_salle_x-1,j*taille_salle_y-1);
-                    glVertex2f((i+1)*taille_salle_x-1,j*taille_salle_y-1);
-                    glVertex2f((i+1)*taille_salle_x-1,(j+1)*taille_salle_y-1);
-                    glVertex2f(i*taille_salle_x-1,(j+1)*taille_salle_y-1);
-                    glEnd();
-                }
-            }
-        }
     }
 }
 

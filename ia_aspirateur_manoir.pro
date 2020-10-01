@@ -17,7 +17,8 @@ SOURCES += \
     fenetre_affichage_manoir.cpp \
     main_aspirateur_manoir.cpp \
     main_windows_aspirateur_manoir.cpp \
-    salle_manoir.cpp
+    salle_manoir.cpp \
+    vision_thread.cpp
 
 HEADERS += \
     aspirateur_agent.h \
@@ -26,7 +27,8 @@ HEADERS += \
     environement_manoir.h \
     fenetre_affichage_manoir.h \
     main_aspirateur_manoir.h \
-    salle_manoir.h
+    salle_manoir.h \
+    vision_thread.h
 
 FORMS += \
     main_aspirateur_manoir.ui

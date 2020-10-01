@@ -14,6 +14,26 @@ Environnement_manoir::Environnement_manoir(QVector<int> taille_manoir)
 
         this->tableau.push_back(ligne_salle_prov);
     }
+
+    //On crée et on place les poussieres
+    for(int i = 0; i < nombre_poussiere_initiale ; i++)
+    {
+        Entite_simulation* poussiere = new Entite_simulation();
+        poussiere->position_x = QRandomGenerator::global()->bounded(tableau[0].size());
+        poussiere->position_y = QRandomGenerator::global()->bounded(tableau.size());
+        poussiere->type_entite = "poussiere";
+        this->placer_entite(poussiere->position_x, poussiere->position_y, poussiere);
+    }
+
+    //On crée et on place les bijoux
+    for(int i = 0; i < nombre_bijou_initiale ; i++)
+    {
+        Entite_simulation* bijou = new Entite_simulation();
+        bijou->position_x = QRandomGenerator::global()->bounded(tableau[0].size());
+        bijou->position_y = QRandomGenerator::global()->bounded(tableau.size());
+        bijou->type_entite = "bijou";
+        this->placer_entite(bijou->position_x, bijou->position_y, bijou);
+    }
 }
 
 QVector<QVector<Salle_manoir>> Environnement_manoir::get_tableau()
@@ -46,47 +66,103 @@ void Environnement_manoir::deplacement_entite(Entite_simulation* entite, int pos
 
     this->placer_entite(position_x, position_y, entite);
     emit rafraichissement_image();
-    emit fin_deplacement(entite);
+    emit fin_action(entite);
 }
 
 void Environnement_manoir::deplacement_haut_entite(Entite_simulation* entite)
 {
-    Deplacement_thread* deplacement = new Deplacement_thread;
-    QObject::connect(deplacement, &Deplacement_thread::fin_deplacement, this, &Environnement_manoir::deplacement_entite);
-    deplacement->entite = entite;
-    deplacement->position_arriver_x = entite->position_x + 1;
-    deplacement->position_arriver_y = entite->position_y;
-    deplacement->temps_attente_ms = temps_deplacement_ms;
-    deplacement->start();
-//    qDebug() << "Markeur 2 : " << thread()->currentThreadId();
+    if(0 <= entite->position_x + 1 && entite->position_x + 1 < tableau[0].size() && 0 <= entite->position_y && entite->position_y < tableau.size())
+    {
+        Deplacement_thread* deplacement = new Deplacement_thread;
+        QObject::connect(deplacement, &Deplacement_thread::fin_deplacement, this, &Environnement_manoir::deplacement_entite);
+        deplacement->entite = entite;
+        deplacement->position_arriver_x = entite->position_x + 1;
+        deplacement->position_arriver_y = entite->position_y;
+        deplacement->temps_attente_ms = temps_deplacement_ms;
+        deplacement->start();
+    }
 }
 
 void Environnement_manoir::deplacement_bas_entite(Entite_simulation* entite)
 {
-    Deplacement_thread* deplacement = new Deplacement_thread;
-    QObject::connect(deplacement, &Deplacement_thread::fin_deplacement, this, &Environnement_manoir::deplacement_entite);
-    deplacement->entite = entite;
-    deplacement->position_arriver_x = entite->position_x - 1;
-    deplacement->position_arriver_y = entite->position_y;
-    deplacement->temps_attente_ms = temps_deplacement_ms;
+    if(0 <= entite->position_x - 1 && entite->position_x - 1 < tableau[0].size() && 0 <= entite->position_y && entite->position_y < tableau.size())
+    {
+        Deplacement_thread* deplacement = new Deplacement_thread;
+        QObject::connect(deplacement, &Deplacement_thread::fin_deplacement, this, &Environnement_manoir::deplacement_entite);
+        deplacement->entite = entite;
+        deplacement->position_arriver_x = entite->position_x - 1;
+        deplacement->position_arriver_y = entite->position_y;
+        deplacement->temps_attente_ms = temps_deplacement_ms;
+    }
 }
 
 void Environnement_manoir::deplacement_gauche_entite(Entite_simulation* entite)
 {
-    Deplacement_thread* deplacement = new Deplacement_thread;
-    QObject::connect(deplacement, &Deplacement_thread::fin_deplacement, this, &Environnement_manoir::deplacement_entite);
-    deplacement->entite = entite;
-    deplacement->position_arriver_x = entite->position_x;
-    deplacement->position_arriver_y = entite->position_y - 1;
-    deplacement->temps_attente_ms = temps_deplacement_ms;
+    if(0 <= entite->position_x && entite->position_x < tableau[0].size() && 0 <= entite->position_y - 1 && entite->position_y - 1 < tableau.size())
+    {
+        Deplacement_thread* deplacement = new Deplacement_thread;
+        QObject::connect(deplacement, &Deplacement_thread::fin_deplacement, this, &Environnement_manoir::deplacement_entite);
+        deplacement->entite = entite;
+        deplacement->position_arriver_x = entite->position_x;
+        deplacement->position_arriver_y = entite->position_y - 1;
+        deplacement->temps_attente_ms = temps_deplacement_ms;
+    }
 }
 
 void Environnement_manoir::deplacement_droite_entite(Entite_simulation* entite)
 {
-    Deplacement_thread* deplacement = new Deplacement_thread;
-    QObject::connect(deplacement, &Deplacement_thread::fin_deplacement, this, &Environnement_manoir::deplacement_entite);
-    deplacement->entite = entite;
-    deplacement->position_arriver_x = entite->position_x;
-    deplacement->position_arriver_y = entite->position_y + 1;
-    deplacement->temps_attente_ms = temps_deplacement_ms;
+    if(0 <= entite->position_x && entite->position_x < tableau[0].size() && 0 <= entite->position_y + 1 && entite->position_y + 1 < tableau.size())
+    {
+        Deplacement_thread* deplacement = new Deplacement_thread;
+        QObject::connect(deplacement, &Deplacement_thread::fin_deplacement, this, &Environnement_manoir::deplacement_entite);
+        deplacement->entite = entite;
+        deplacement->position_arriver_x = entite->position_x;
+        deplacement->position_arriver_y = entite->position_y + 1;
+        deplacement->temps_attente_ms = temps_deplacement_ms;
+    }
 }
+
+void Environnement_manoir::mise_jour_manoire(Entite_simulation* entite)
+{
+    Vision_thread* vision = new Vision_thread;
+    QObject::connect(vision, &Vision_thread::fin_vision, this, &Environnement_manoir::envoi_mise_jour_manoire);
+    vision->entite = entite;
+    vision->temps_attente_ms = temps_vision_ms;
+    vision->start();
+}
+
+void Environnement_manoir::envoi_mise_jour_manoire(Entite_simulation* entite)
+{
+    emit mise_jour_manoir(entite, this->tableau);
+    emit fin_action(entite);
+}
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+//void Environnement_manoir::mise_jour_manoire(Entite_simulation* entite)
+//{
+//    Vision_thread* vision = new Vision_thread;
+//    QObject::connect(vision, &Vision_thread::fin_vision, this, &Environnement_manoir::envoi_mise_jour_manoire);
+//    vision->entite = entite;
+//    vision->temps_attente_ms = temps_vision_ms;
+//    vision->start();
+//}
+
+//void Environnement_manoir::envoi_mise_jour_manoire(Entite_simulation* entite)
+//{
+//    emit mise_jour_manoir(entite, this->tableau);
+//}
+
+//void Environnement_manoir::mise_jour_manoire(Entite_simulation* entite)
+//{
+//    Vision_thread* vision = new Vision_thread;
+//    QObject::connect(vision, &Vision_thread::fin_vision, this, &Environnement_manoir::envoi_mise_jour_manoire);
+//    vision->entite = entite;
+//    vision->temps_attente_ms = temps_vision_ms;
+//    vision->start();
+//}
+
+//void Environnement_manoir::envoi_mise_jour_manoire(Entite_simulation* entite)
+//{
+//    emit mise_jour_manoir(entite, this->tableau);
+//}
