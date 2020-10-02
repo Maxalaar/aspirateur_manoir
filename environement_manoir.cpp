@@ -1,7 +1,10 @@
 #include "environement_manoir.h"
 
-Environnement_manoir::Environnement_manoir(QVector<int> taille_manoir)
+Environnement_manoir::Environnement_manoir(QVector<int> taille_manoir, int nombre_poussiere_initiale, int nombre_bijou_initiale)
 {
+    this->nombre_poussiere_initiale = nombre_poussiere_initiale;
+    this->nombre_bijou_initiale = nombre_bijou_initiale;
+
     //On crée les salles
     for(int i = 0; i < taille_manoir[1]; i++)
     {
@@ -127,6 +130,7 @@ void Environnement_manoir::deplacement_haut_entite(Entite_simulation* entite)
 void Environnement_manoir::mise_jour_manoire_init(Entite_simulation* entite)
 {
     Vision_thread* vision = new Vision_thread;
+    qDebug() << "Markeur 4 : ";
     QObject::connect(vision, &Vision_thread::fin_vision, this, &Environnement_manoir::mise_jour_manoire);
     vision->entite = entite;
     vision->temps_attente_ms = temps_vision_ms;
@@ -136,6 +140,7 @@ void Environnement_manoir::mise_jour_manoire_init(Entite_simulation* entite)
 void Environnement_manoir::mise_jour_manoire(Entite_simulation* entite)
 {
     emit mise_jour_manoir(entite, this->tableau);
+    qDebug() << "Markeur 3 : ";
     emit fin_action(entite);
 }
 

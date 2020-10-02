@@ -16,15 +16,15 @@ class Environnement_manoir : public QObject/* : public QThread*/
 {
     Q_OBJECT
 public:
-    Environnement_manoir(QVector<int> taille_manoir);
+    Environnement_manoir(QVector<int> taille_manoir, int nombre_poussiere_initiale, int nombre_bijou_initiale);
     QVector<QVector<Salle_manoir>> get_tableau();
     void placer_entite(int positon_x, int positon_y, Entite_simulation* entite);
-    int temps_deplacement_ms = 50;
-    int temps_vision_ms = 50;
-    int temps_recuperation_ms = 50;
-    int temps_aspiration_ms = 50;
-    int nombre_poussiere_initiale = 10;
-    int nombre_bijou_initiale = 4;
+    int temps_deplacement_ms = 80;
+    int temps_vision_ms = 100;
+    int temps_recuperation_ms = 120;
+    int temps_aspiration_ms = 120;
+    int nombre_poussiere_initiale;
+    int nombre_bijou_initiale;
 
 //    void run() override;
 

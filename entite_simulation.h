@@ -4,6 +4,18 @@
 #include <QString>
 #include <QThread>
 #include <QObject>
+#include <QVector>
+
+enum class action_type
+{
+    deplacement_haut,
+    deplacement_bas,
+    deplacement_gauche,
+    deplacement_droite,
+    voir,
+    ramasser,
+    aspirer
+};
 
 class Entite_simulation : public QThread
 {
