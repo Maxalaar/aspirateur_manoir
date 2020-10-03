@@ -1,9 +1,11 @@
 #include "environement_manoir.h"
 
-Environnement_manoir::Environnement_manoir(QVector<int> taille_manoir, int nombre_poussiere_initiale, int nombre_bijou_initiale)
+Environnement_manoir::Environnement_manoir(QVector<int> taille_manoir, int nombre_poussiere_initiale, int nombre_bijou_initiale, int apparation_poussiere_ms, int apparation_bijou_ms)
 {
     this->nombre_poussiere_initiale = nombre_poussiere_initiale;
     this->nombre_bijou_initiale = nombre_bijou_initiale;
+    this->apparation_poussiere_ms = apparation_poussiere_ms;
+    this->apparation_bijou_ms = apparation_bijou_ms;
 
     //On crée les salles
     for(int i = 0; i < taille_manoir[1]; i++)
@@ -40,6 +42,18 @@ Environnement_manoir::Environnement_manoir(QVector<int> taille_manoir, int nombr
         bijou->type_entite = "bijou";
         this->placer_entite(bijou->position_x, bijou->position_y, bijou);
     }
+
+    //On lance l'apparition des poussieres
+    Apparition_poussiere_thread* apparition_poussiere = new Apparition_poussiere_thread;
+    QObject::connect(apparition_poussiere, &Apparition_poussiere_thread::fin_apparition_poussiere, this, &Environnement_manoir::apparition_poussiere);
+    apparition_poussiere->temps_attente_ms = apparation_poussiere_ms;
+    apparition_poussiere->start();
+
+    //On lance l'apparition des bijoux
+    Apparition_bijou_thread* apparition_bijou = new Apparition_bijou_thread;
+    QObject::connect(apparition_bijou, &Apparition_bijou_thread::fin_apparition_bijou, this, &Environnement_manoir::apparition_bijou);
+    apparition_bijou->temps_attente_ms = apparation_bijou_ms;
+    apparition_bijou->start();
 }
 
 QVector<QVector<Salle_manoir>> Environnement_manoir::get_tableau()
@@ -130,7 +144,6 @@ void Environnement_manoir::deplacement_haut_entite(Entite_simulation* entite)
 void Environnement_manoir::mise_jour_manoire_init(Entite_simulation* entite)
 {
     Vision_thread* vision = new Vision_thread;
-    qDebug() << "Markeur 4 : ";
     QObject::connect(vision, &Vision_thread::fin_vision, this, &Environnement_manoir::mise_jour_manoire);
     vision->entite = entite;
     vision->temps_attente_ms = temps_vision_ms;
@@ -140,7 +153,6 @@ void Environnement_manoir::mise_jour_manoire_init(Entite_simulation* entite)
 void Environnement_manoir::mise_jour_manoire(Entite_simulation* entite)
 {
     emit mise_jour_manoir(entite, this->tableau);
-    qDebug() << "Markeur 3 : ";
     emit fin_action(entite);
 }
 
@@ -161,6 +173,8 @@ void Environnement_manoir::ramassage(Entite_simulation* entite)
         if(tableau[entite->position_x][entite->position_y].liste_entite[i]->type_entite == "bijou")
         {
             tableau[entite->position_x][entite->position_y].liste_entite.remove(i);
+            socre = socre + 1;
+            qDebug() << "le score actuelle est de : " << socre;
         }
     }
     emit fin_action(entite);
@@ -179,10 +193,52 @@ void Environnement_manoir::aspiration(Entite_simulation* entite)
 {
     for(int i = 0; i < tableau[entite->position_x][entite->position_y].liste_entite.size(); i++)
     {
-        if(tableau[entite->position_x][entite->position_y].liste_entite[i]->type_entite == "poussiere" || tableau[entite->position_x][entite->position_y].liste_entite[i]->type_entite == "bijou")
+        if(tableau[entite->position_x][entite->position_y].liste_entite[i]->type_entite == "poussiere")
         {
             tableau[entite->position_x][entite->position_y].liste_entite.remove(i);
+            socre = socre + 1;
+            qDebug() << "le score actuelle est de : " << socre;
+        }
+
+        if(tableau[entite->position_x][entite->position_y].liste_entite[i]->type_entite == "bijou")
+        {
+            tableau[entite->position_x][entite->position_y].liste_entite.remove(i);
+            socre = socre - 1;
+            qDebug() << "le score actuelle est de : " << socre;
         }
     }
     emit fin_action(entite);
+}
+
+
+void Environnement_manoir::apparition_poussiere()
+{
+    Entite_simulation* poussiere = new Entite_simulation();
+    poussiere->position_x = QRandomGenerator::global()->bounded(tableau[0].size());
+    poussiere->position_y = QRandomGenerator::global()->bounded(tableau.size());
+    poussiere->type_entite = "poussiere";
+    this->placer_entite(poussiere->position_x, poussiere->position_y, poussiere);
+    emit rafraichissement_image();
+
+    //On lance l'apparition des poussieres
+    Apparition_poussiere_thread* apparition_poussiere = new Apparition_poussiere_thread;
+    QObject::connect(apparition_poussiere, &Apparition_poussiere_thread::fin_apparition_poussiere, this, &Environnement_manoir::apparition_poussiere);
+    apparition_poussiere->temps_attente_ms = apparation_poussiere_ms;
+    apparition_poussiere->start();
+}
+
+void Environnement_manoir::apparition_bijou()
+{
+    Entite_simulation* bijou = new Entite_simulation();
+    bijou->position_x = QRandomGenerator::global()->bounded(tableau[0].size());
+    bijou->position_y = QRandomGenerator::global()->bounded(tableau.size());
+    bijou->type_entite = "bijou";
+    this->placer_entite(bijou->position_x, bijou->position_y, bijou);
+    emit rafraichissement_image();
+
+    //On lance l'apparition des bijoux
+    Apparition_bijou_thread* apparition_bijou = new Apparition_bijou_thread;
+    QObject::connect(apparition_bijou, &Apparition_bijou_thread::fin_apparition_bijou, this, &Environnement_manoir::apparition_bijou);
+    apparition_bijou->temps_attente_ms = apparation_bijou_ms;
+    apparition_bijou->start();
 }

@@ -11,12 +11,14 @@
 #include "vision_thread.h"
 #include "ramassage_thread.h"
 #include "aspiration_thread.h"
+#include "apparition_bijou_thread.h"
+#include "apparition_poussiere_thread.h"
 
 class Environnement_manoir : public QObject/* : public QThread*/
 {
     Q_OBJECT
 public:
-    Environnement_manoir(QVector<int> taille_manoir, int nombre_poussiere_initiale, int nombre_bijou_initiale);
+    Environnement_manoir(QVector<int> taille_manoir, int nombre_poussiere_initiale, int nombre_bijou_initiale, int apparation_poussiere_ms, int apparation_bijou_ms);
     QVector<QVector<Salle_manoir>> get_tableau();
     void placer_entite(int positon_x, int positon_y, Entite_simulation* entite);
     int temps_deplacement_ms = 80;
@@ -25,6 +27,9 @@ public:
     int temps_aspiration_ms = 120;
     int nombre_poussiere_initiale;
     int nombre_bijou_initiale;
+    int apparation_poussiere_ms;
+    int apparation_bijou_ms;
+    int socre = 0;
 
 //    void run() override;
 
@@ -52,6 +57,12 @@ public slots:
     //Gestion aspiration
     void aspiration_init(Entite_simulation* entite);
     void aspiration(Entite_simulation* entite);
+
+    //Gestion apparition poussiere
+    void apparition_poussiere();
+
+    //Gestion apparition bijou
+    void apparition_bijou();
 
 signals:
     void rafraichissement_image(void);

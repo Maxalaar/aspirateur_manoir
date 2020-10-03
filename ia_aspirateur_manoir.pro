@@ -10,11 +10,14 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    apparition_bijou_thread.cpp \
+    apparition_poussiere_thread.cpp \
     aspirateur_agent.cpp \
     aspiration_thread.cpp \
     deplacement_thread.cpp \
     entite_simulation.cpp \
     environement_manoir.cpp \
+    exploration_informees_thread.cpp \
     exploration_non_informees_thread.cpp \
     fenetre_affichage_manoir.cpp \
     main_aspirateur_manoir.cpp \
@@ -24,11 +27,14 @@ SOURCES += \
     vision_thread.cpp
 
 HEADERS += \
+    apparition_bijou_thread.h \
+    apparition_poussiere_thread.h \
     aspirateur_agent.h \
     aspiration_thread.h \
     deplacement_thread.h \
     entite_simulation.h \
     environement_manoir.h \
+    exploration_informees_thread.h \
     exploration_non_informees_thread.h \
     fenetre_affichage_manoir.h \
     main_aspirateur_manoir.h \

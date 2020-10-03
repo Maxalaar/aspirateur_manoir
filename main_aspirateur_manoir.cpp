@@ -9,21 +9,29 @@ int main(int argc, char *argv[])
 //    w.show();
     QVector<int> taille_manoir;
     //On fixe la taille en X
-    taille_manoir.push_back(100);
+    taille_manoir.push_back(5);
     //On fixe la taille en Y
-    taille_manoir.push_back(100);
+    taille_manoir.push_back(5);
     //On fixe le nombre d'aspirateur
-    int nombre_aspirateur = 10;
+    int nombre_aspirateur = 1;
     //On fixe le nombre de poussier
-    int nombre_poussiere_initiale = 60;
+    int nombre_poussiere_initiale = 0;
     //On fixe le nombre de bijou
-    int nombre_bijou_initiale = 20;
+    int nombre_bijou_initiale = 0;
+    //On fixe le temps d'apparition entre chaque poussiere
+    int apparation_poussiere_ms = 3000;
+    //On fixe le temps d'apparition entre chaque bijou
+    int apparation_bijou_ms = 3000;
+    //On fixe le nombre de tour avant la syncronisation de la vision pour l'aspirateur
+    int sycro_vision = 5;
+    //On fixe recherche informer (true) ou non informer (false) pour les aspirateurs
+    bool exploration_informees = true;
 
-    Environnement_manoir* manoir_1 = new Environnement_manoir(taille_manoir, nombre_poussiere_initiale, nombre_bijou_initiale);
+    Environnement_manoir* manoir_1 = new Environnement_manoir(taille_manoir, nombre_poussiere_initiale, nombre_bijou_initiale, apparation_poussiere_ms, apparation_bijou_ms);
 
     for(int i = 0; i < nombre_aspirateur; i++)
     {
-        Aspirateur_agent* aspirateur_prov = new Aspirateur_agent(QRandomGenerator::global()->bounded(manoir_1->get_tableau()[0].size()), QRandomGenerator::global()->bounded(manoir_1->get_tableau().size()), manoir_1);
+        Aspirateur_agent* aspirateur_prov = new Aspirateur_agent(QRandomGenerator::global()->bounded(manoir_1->get_tableau()[0].size()), QRandomGenerator::global()->bounded(manoir_1->get_tableau().size()), manoir_1, sycro_vision, exploration_informees);
     }
 
     Fenetre_affichage_manoir* fenetre_manoir_1 = new Fenetre_affichage_manoir(manoir_1);

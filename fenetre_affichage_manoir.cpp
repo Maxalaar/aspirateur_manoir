@@ -18,7 +18,7 @@ Fenetre_affichage_manoir::Fenetre_affichage_manoir(Environnement_manoir* manoir,
 
     //Là je comprend mieux a quoi ça sert
     this->setTitle("Manoir de l'Aspirateur ");
-    this->resize(640, 480);
+    this->resize(1280, 960);
     this->manoir = manoir;
 
     QObject::connect(manoir, &Environnement_manoir::rafraichissement_image, this, &Fenetre_affichage_manoir::rafraichissement_image);

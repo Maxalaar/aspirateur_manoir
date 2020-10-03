@@ -205,7 +205,7 @@ void Exploration_non_informees_thread::run()
         action_front_exploration_liste.remove(cout_faible_indice);
     }
 
-    action_resulta_exploration.push_back(action_type::voir);
+//    action_resulta_exploration.push_back(action_type::voir);
 
     //On convertie les actions en int
     QVector<int> resultat_conversion;
