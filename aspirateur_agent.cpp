@@ -2,7 +2,7 @@
 
 Aspirateur_agent::Aspirateur_agent(int position_initial_x, int position_initial_y, Environnement_manoir* manoir, int sycro_vision, bool exploration_informees)
 {
-    this->sycro_vision = sycro_vision;
+    this->syncro_vision = sycro_vision;
     this->exploration_informees_bool = exploration_informees;
     position_x = position_initial_x;
     position_y = position_initial_y;
@@ -39,7 +39,7 @@ void Aspirateur_agent::fonction_action(Entite_simulation* entite)
 {
     if(entite == this)
     {
-        if(liste_action.size() > 0 && compteur_vision < sycro_vision && recherche_en_cours != true)
+        if(liste_action.size() > 0 && compteur_vision < syncro_vision && recherche_en_cours != true)
         {
             switch(liste_action[0])
             {

@@ -16,7 +16,7 @@ public:
 private:
     Environnement_manoir* manoir;
     QVector<QVector<Salle_manoir>> tableau;
-    int sycro_vision;
+    int syncro_vision;
     int compteur_vision = 0;
     QVector<action_type> liste_action;
     void exploration_non_informees(QVector<QVector<Salle_manoir>> tableau);

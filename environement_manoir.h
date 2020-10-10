@@ -21,10 +21,10 @@ public:
     Environnement_manoir(QVector<int> taille_manoir, int nombre_poussiere_initiale, int nombre_bijou_initiale, int apparation_poussiere_ms, int apparation_bijou_ms);
     QVector<QVector<Salle_manoir>> get_tableau();
     void placer_entite(int positon_x, int positon_y, Entite_simulation* entite);
-    int temps_deplacement_ms = 80;
-    int temps_vision_ms = 100;
-    int temps_recuperation_ms = 120;
-    int temps_aspiration_ms = 120;
+    int temps_deplacement_ms = 150;
+    int temps_vision_ms = 200;
+    int temps_recuperation_ms = 250;
+    int temps_aspiration_ms = 250;
     int nombre_poussiere_initiale;
     int nombre_bijou_initiale;
     int apparation_poussiere_ms;

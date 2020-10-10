@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     //On fixe le temps d'apparition entre chaque bijou
     int apparation_bijou_ms = 1000;
     //On fixe le nombre de tour avant la syncronisation de la vision pour l'aspirateur
-    int sycro_vision = 10;
+    int sycro_vision = 1;
     //On fixe recherche informer (true) ou non informer (false) pour les aspirateurs
     bool exploration_informees = true;
 
